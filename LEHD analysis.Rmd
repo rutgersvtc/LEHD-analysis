@@ -1,0 +1,299 @@
+---
+title: "LEHD analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# 
+# OD – Origin-Destination data, jobs totals are associated with both a home Census Block and a 
+# work Census Block 
+# RAC – Residence Area Characteristic data, jobs are totaled by home Census Block 
+# WAC – Workplace Area Characteristic data, jobs are totaled by work Census Block
+
+library(dplyr)
+library(tidyverse)
+nj_xwalk <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_xwalk.csv")
+
+Geography <- select(nj_xwalk, tabblk2010,trct,ctyname)
+MCGeography <- subset(Geography, ctyname == "Middlesex County, NJ")
+
+
+# WAC analysis
+wac_2018 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_wac_S000_JT00_2018.csv")
+colnames(wac_2018)[1] <- "tabblk2010"
+
+MC_WAC2018 <- left_join(MCGeography,wac_2018, by= "tabblk2010" ) 
+
+MC_WAC_tract2018 <- aggregate(MC_WAC2018[,4:55], by = list(MC_WAC2018$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_WAC_tract2018)[1] <- "trct"
+
+write.csv(MC_WAC_tract2018,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_WAC_2018.csv")
+
+# 2017
+wac_2017 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_wac_S000_JT00_2017.csv")
+colnames(wac_2017)[1] <- "tabblk2010"
+
+MC_WAC2017 <- left_join(MCGeography,wac_2017, by= "tabblk2010" ) 
+
+MC_WAC_tract2017 <- aggregate(MC_WAC2017[,4:55], by = list(MC_WAC2017$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_WAC_tract2017)[1] <- "trct"
+
+write.csv(MC_WAC_tract2017,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_WAC_2017.csv")
+
+
+# 2016
+
+wac_2016 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_wac_S000_JT00_2016.csv")
+colnames(wac_2016)[1] <- "tabblk2010"
+
+MC_WAC2016 <- left_join(MCGeography,wac_2016, by= "tabblk2010" ) 
+
+MC_WAC_tract2016 <- aggregate(MC_WAC2016[,4:55], by = list(MC_WAC2016$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_WAC_tract2016)[1] <- "trct"
+
+write.csv(MC_WAC_tract2016,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_WAC_2016.csv")
+
+# 2015
+wac_2015 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_wac_S000_JT00_2015.csv")
+colnames(wac_2015)[1] <- "tabblk2010"
+
+MC_WAC2015 <- left_join(MCGeography,wac_2015, by= "tabblk2010" ) 
+
+MC_WAC_tract2015 <- aggregate(MC_WAC2015[,4:55], by = list(MC_WAC2015$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_WAC_tract2015)[1] <- "trct"
+
+write.csv(MC_WAC_tract2015,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_WAC_2015.csv")
+
+# 2014
+wac_2014 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_wac_S000_JT00_2014.csv")
+colnames(wac_2014)[1] <- "tabblk2010"
+
+MC_WAC2014 <- left_join(MCGeography,wac_2014, by= "tabblk2010" ) 
+
+MC_WAC_tract2014 <- aggregate(MC_WAC2014[,4:55], by = list(MC_WAC2014$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_WAC_tract2014)[1] <- "trct"
+
+write.csv(MC_WAC_tract2014,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_WAC_2014.csv")
+
+# add rownames as a column in each data.frame and bind rows
+WAC_5yearestimate <- bind_rows(MC_WAC_tract2018 %>% tibble::rownames_to_column(), 
+          MC_WAC_tract2017 %>% tibble::rownames_to_column(),
+          MC_WAC_tract2016 %>% tibble::rownames_to_column(),
+          MC_WAC_tract2015 %>% tibble::rownames_to_column(),
+          MC_WAC_tract2014 %>% tibble::rownames_to_column()) %>% 
+    # evaluate following calls for each value in the rowname column
+    group_by(rowname) %>% 
+    # add all non-grouping variables
+    summarise_all(mean)
+
+write.csv(WAC_5yearestimate,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/WAC_5yearestimate.csv")
+
+```
+
+```{r}
+
+
+
+# RAC analysis
+RAC_2018 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_RAC_S000_JT00_2018.csv")
+colnames(RAC_2018)[1] <- "tabblk2010"
+
+MC_RAC2018 <- left_join(MCGeography,RAC_2018, by= "tabblk2010" ) 
+
+MC_RAC_tract2018 <- aggregate(MC_RAC2018[,4:45], by = list(MC_RAC2018$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_RAC_tract2018)[1] <- "trct"
+
+write.csv(MC_RAC_tract2018,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_RAC_2018.csv")
+
+# 2017
+RAC_2017 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_RAC_S000_JT00_2017.csv")
+colnames(RAC_2017)[1] <- "tabblk2010"
+
+MC_RAC2017 <- left_join(MCGeography,RAC_2017, by= "tabblk2010" ) 
+
+MC_RAC_tract2017 <- aggregate(MC_RAC2017[,4:45], by = list(MC_RAC2017$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_RAC_tract2017)[1] <- "trct"
+
+write.csv(MC_RAC_tract2017,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_RAC_2017.csv")
+
+
+# 2016
+
+RAC_2016 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_RAC_S000_JT00_2016.csv")
+colnames(RAC_2016)[1] <- "tabblk2010"
+
+MC_RAC2016 <- left_join(MCGeography,RAC_2016, by= "tabblk2010" ) 
+
+MC_RAC_tract2016 <- aggregate(MC_RAC2016[,4:45], by = list(MC_RAC2016$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_RAC_tract2016)[1] <- "trct"
+
+write.csv(MC_RAC_tract2016,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_RAC_2016.csv")
+
+# 2015
+RAC_2015 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_RAC_S000_JT00_2015.csv")
+colnames(RAC_2015)[1] <- "tabblk2010"
+
+MC_RAC2015 <- left_join(MCGeography,RAC_2015, by= "tabblk2010" ) 
+
+MC_RAC_tract2015 <- aggregate(MC_RAC2015[,4:45], by = list(MC_RAC2015$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_RAC_tract2015)[1] <- "trct"
+
+write.csv(MC_RAC_tract2015,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_RAC_2015.csv")
+
+# 2014
+RAC_2014 <- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_RAC_S000_JT00_2014.csv")
+colnames(RAC_2014)[1] <- "tabblk2010"
+
+MC_RAC2014 <- left_join(MCGeography,RAC_2014, by= "tabblk2010" ) 
+
+MC_RAC_tract2014 <- aggregate(MC_RAC2014[,4:45], by = list(MC_RAC2014$trct), FUN = sum, na.rm=TRUE)
+colnames(MC_RAC_tract2014)[1] <- "trct"
+
+write.csv(MC_RAC_tract2014,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/MC_RAC_2014.csv")
+
+# add rownames as a column in each data.frame and bind rows
+RAC_5yearestimate <- bind_rows(MC_RAC_tract2018 %>% tibble::rownames_to_column(), 
+                               MC_RAC_tract2017 %>% tibble::rownames_to_column(),
+                               MC_RAC_tract2016 %>% tibble::rownames_to_column(),
+                               MC_RAC_tract2015 %>% tibble::rownames_to_column(),
+                               MC_RAC_tract2014 %>% tibble::rownames_to_column()) %>% 
+  # evaluate following calls for each value in the rowname column
+  group_by(trct) %>% 
+  # add all non-grouping variables
+  summarise_all(mean)
+
+write.csv(RAC_5yearestimate,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/RAC_5yearestimate.csv")
+```
+
+
+```{r}
+# OD
+
+OD_2018<- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_od_main_JT00_2018.csv")
+
+# join OD table to census tract code. h means "home; w means"workplace"
+OD_2018_tract <- merge(OD_2018, Geography, by.x = "w_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2018_tract)[names(OD_2018_tract) == "trct"] <- "w_tract"
+names(OD_2018_tract)[names(OD_2018_tract) == "ctyname"] <- "w_county"
+OD_2018_tract <- merge(OD_2018_tract, Geography, by.x = "h_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2018_tract)[names(OD_2018_tract) == "trct"] <- "h_tract"
+names(OD_2018_tract)[names(OD_2018_tract) == "ctyname"] <- "h_county"
+
+# select home or workplace county is "Middlesex County"
+OD_2018_tract <- subset(OD_2018_tract, w_county == "Middlesex County, NJ"| h_county == "Middlesex County, NJ" )
+
+# column "ODpair" is the ID for OD
+OD_2018_tract$ODpair <- paste(OD_2018_tract$h_tract, OD_2018_tract$w_tract, sep = "_")
+OD_2018_tractsum<- aggregate(OD_2018_tract[,3:12], by = list(OD_2018_tract$ODpair), FUN = sum, na.rm=TRUE)
+colnames(OD_2018_tractsum)[1] <- "ODpair"
+OD_2018_tractsum$h_tract <- substr(OD_2018_tractsum$ODpair, 1,11)
+OD_2018_tractsum$w_tract <- substr(OD_2018_tractsum$ODpair, 13,23)
+
+
+OD_2017<- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_od_main_JT00_2017.csv")
+
+# join OD table to census tract code. h means "home; w means"workplace"
+OD_2017_tract <- merge(OD_2017, Geography, by.x = "w_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2017_tract)[names(OD_2017_tract) == "trct"] <- "w_tract"
+names(OD_2017_tract)[names(OD_2017_tract) == "ctyname"] <- "w_county"
+OD_2017_tract <- merge(OD_2017_tract, Geography, by.x = "h_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2017_tract)[names(OD_2017_tract) == "trct"] <- "h_tract"
+names(OD_2017_tract)[names(OD_2017_tract) == "ctyname"] <- "h_county"
+
+# select home or workplace county is "Middlesex County"
+OD_2017_tract <- subset(OD_2017_tract, w_county == "Middlesex County, NJ"| h_county == "Middlesex County, NJ" )
+
+# column "ODpair" is the ID for OD
+OD_2017_tract$ODpair <- paste(OD_2017_tract$h_tract, OD_2017_tract$w_tract, sep = "_")
+OD_2017_tractsum<- aggregate(OD_2017_tract[,3:12], by = list(OD_2017_tract$ODpair), FUN = sum, na.rm=TRUE)
+colnames(OD_2017_tractsum)[1] <- "ODpair"
+OD_2017_tractsum$h_tract <- substr(OD_2017_tractsum$ODpair, 1,11)
+OD_2017_tractsum$w_tract <- substr(OD_2017_tractsum$ODpair, 13,23)
+
+OD_2016<- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_od_main_JT00_2016.csv")
+
+# join OD table to census tract code. h means "home; w means"workplace"
+OD_2016_tract <- merge(OD_2016, Geography, by.x = "w_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2016_tract)[names(OD_2016_tract) == "trct"] <- "w_tract"
+names(OD_2016_tract)[names(OD_2016_tract) == "ctyname"] <- "w_county"
+OD_2016_tract <- merge(OD_2016_tract, Geography, by.x = "h_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2016_tract)[names(OD_2016_tract) == "trct"] <- "h_tract"
+names(OD_2016_tract)[names(OD_2016_tract) == "ctyname"] <- "h_county"
+
+# select home or workplace county is "Middlesex County"
+OD_2016_tract <- subset(OD_2016_tract, w_county == "Middlesex County, NJ"| h_county == "Middlesex County, NJ" )
+
+# column "ODpair" is the ID for OD
+OD_2016_tract$ODpair <- paste(OD_2016_tract$h_tract, OD_2016_tract$w_tract, sep = "_")
+OD_2016_tractsum<- aggregate(OD_2016_tract[,3:12], by = list(OD_2016_tract$ODpair), FUN = sum, na.rm=TRUE)
+colnames(OD_2016_tractsum)[1] <- "ODpair"
+OD_2016_tractsum$h_tract <- substr(OD_2016_tractsum$ODpair, 1,11)
+OD_2016_tractsum$w_tract <- substr(OD_2016_tractsum$ODpair, 13,23)
+
+OD_2015<- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_od_main_JT00_2015.csv")
+
+# join OD table to census tract code. h means "home; w means"workplace"
+OD_2015_tract <- merge(OD_2015, Geography, by.x = "w_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2015_tract)[names(OD_2015_tract) == "trct"] <- "w_tract"
+names(OD_2015_tract)[names(OD_2015_tract) == "ctyname"] <- "w_county"
+OD_2015_tract <- merge(OD_2015_tract, Geography, by.x = "h_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2015_tract)[names(OD_2015_tract) == "trct"] <- "h_tract"
+names(OD_2015_tract)[names(OD_2015_tract) == "ctyname"] <- "h_county"
+
+# select home or workplace county is "Middlesex County"
+OD_2015_tract <- subset(OD_2015_tract, w_county == "Middlesex County, NJ"| h_county == "Middlesex County, NJ" )
+
+# column "ODpair" is the ID for OD
+OD_2015_tract$ODpair <- paste(OD_2015_tract$h_tract, OD_2015_tract$w_tract, sep = "_")
+OD_2015_tractsum<- aggregate(OD_2015_tract[,3:12], by = list(OD_2015_tract$ODpair), FUN = sum, na.rm=TRUE)
+colnames(OD_2015_tractsum)[1] <- "ODpair"
+OD_2015_tractsum$h_tract <- substr(OD_2015_tractsum$ODpair, 1,11)
+OD_2015_tractsum$w_tract <- substr(OD_2015_tractsum$ODpair, 13,23)
+
+OD_2014<- read.csv("T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/original data/nj_od_main_JT00_2014.csv")
+
+# join OD table to census tract code. h means "home; w means"workplace"
+OD_2014_tract <- merge(OD_2014, Geography, by.x = "w_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2014_tract)[names(OD_2014_tract) == "trct"] <- "w_tract"
+names(OD_2014_tract)[names(OD_2014_tract) == "ctyname"] <- "w_county"
+OD_2014_tract <- merge(OD_2014_tract, Geography, by.x = "h_geocode", by.y = "tabblk2010", all.x = TRUE, all.y = FALSE )
+names(OD_2014_tract)[names(OD_2014_tract) == "trct"] <- "h_tract"
+names(OD_2014_tract)[names(OD_2014_tract) == "ctyname"] <- "h_county"
+
+# select home or workplace county is "Middlesex County"
+OD_2014_tract <- subset(OD_2014_tract, w_county == "Middlesex County, NJ"| h_county == "Middlesex County, NJ" )
+
+# column "ODpair" is the ID for OD
+OD_2014_tract$ODpair <- paste(OD_2014_tract$h_tract, OD_2014_tract$w_tract, sep = "_")
+OD_2014_tractsum<- aggregate(OD_2014_tract[,3:12], by = list(OD_2014_tract$ODpair), FUN = sum, na.rm=TRUE)
+colnames(OD_2014_tractsum)[1] <- "ODpair"
+OD_2014_tractsum$h_tract <- substr(OD_2014_tractsum$ODpair, 1,11)
+OD_2014_tractsum$w_tract <- substr(OD_2014_tractsum$ODpair, 13,23)
+
+
+# add rownames as a column in each data.frame and bind rows
+OD_5yearestimate  <- bind_rows(OD_2018_tractsum %>% tibble::rownames_to_column(), 
+                               OD_2017_tractsum %>% tibble::rownames_to_column(),
+                               OD_2016_tractsum %>% tibble::rownames_to_column(),
+                               OD_2015_tractsum %>% tibble::rownames_to_column(),
+                               OD_2014_tractsum %>% tibble::rownames_to_column()) %>% 
+  # evaluate following calls for each value in the rowname column
+  group_by(ODpair) %>% 
+  # add all non-grouping variables
+  summarise_all(mean)
+
+#write.csv(OD_2018_tractsum,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/OD_2018_tractsum.csv")
+
+# downtown New Brunswick census tract 34023009300
+# home in downtown New Brunswick, where do they work?
+OD_2018_home34023009300 <- subset(OD_2018_tractsum,h_tract == "34023009300")
+write.csv(OD_2018_home34023009300,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/OD_2018_home34023009300.csv")
+
+OD_2018_work34023009300 <- subset(OD_2018_tractsum,w_tract == "34023009300")
+write.csv(OD_2018_work34023009300,"T:/TPI/01 PROJECTS_VTC/CARNEGIE_J/NJCCA-HealthyJustCO2-Neutral Mob-302702-320/Project Activities/2. Case Studies/Middlesex County/LEHD data/OD_2018_work34023009300.csv")
+```
+
